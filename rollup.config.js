@@ -3,12 +3,12 @@ import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
-import { config as configDotenv } from "dotenv";
+import { config } from "dotenv";
 import replace from "@rollup/plugin-replace";
 import css from "rollup-plugin-css-only";
 
 const production = !process.env.ROLLUP_WATCH;
-configDotenv();
+config();
 
 function serve() {
   let server;
@@ -51,11 +51,11 @@ export default {
       },
     }),
     replace({
-      __myapp: JSON.stringify({
+      // stringify the object
+      process: JSON.stringify({
         env: {
           isProd: production,
-          OMDBAPI: process.env.OMDBAPI,
-          API_KEY: process.env.API_KEY,
+          ...config().parsed,
         },
       }),
     }),
